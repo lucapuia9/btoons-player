@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="ro">
 <head>
@@ -13,176 +12,43 @@
     >
 
     <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        html,
-        body {
+        html, body {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
             background: #000;
-        }
-
-        body {
             overflow: hidden;
         }
 
-        .player-container {
+        #player {
             width: 100%;
             height: 100%;
-            background: #000;
         }
 
         .video-js {
-            width: 100% !important;
-            height: 100% !important;
-            font-family: Arial, Helvetica, sans-serif;
-            background: #000;
-        }
-
-        /* Bara de controale */
-        .video-js .vjs-control-bar {
-            height: 58px;
-            padding: 0 12px;
-            background: linear-gradient(
-                to top,
-                rgba(0, 0, 0, 0.95),
-                rgba(0, 0, 0, 0.65),
-                transparent
-            );
-        }
-
-        /* Butoane */
-        .video-js .vjs-control {
-            width: 42px;
-        }
-
-        .video-js .vjs-button > .vjs-icon-placeholder:before {
-            font-size: 1.5em;
-            line-height: 42px;
-        }
-
-        /* Bara de progres */
-        .video-js .vjs-progress-control {
-            position: absolute;
-            top: -6px;
-            left: 12px;
-            right: 12px;
-            width: auto;
-            height: 6px;
-        }
-
-        .video-js .vjs-progress-holder {
-            height: 4px;
-            margin: 0;
-            border-radius: 5px;
-        }
-
-        .video-js .vjs-play-progress {
-            border-radius: 5px;
-        }
-
-        .video-js .vjs-load-progress {
-            border-radius: 5px;
-        }
-
-        /* Timp */
-        .video-js .vjs-time-control {
-            font-size: 13px;
-            line-height: 42px;
-        }
-
-        /* Buton play central */
-        .video-js .vjs-big-play-button {
-            width: 76px;
-            height: 76px;
-            margin-left: -38px;
-            margin-top: -38px;
-            border: 0;
-            border-radius: 50%;
-            background: rgba(0, 0, 0, 0.65);
-            backdrop-filter: blur(8px);
-        }
-
-        .video-js .vjs-big-play-button:hover {
-            background: rgba(0, 0, 0, 0.85);
-        }
-
-        .video-js .vjs-big-play-button .vjs-icon-placeholder:before {
-            font-size: 42px;
-            line-height: 76px;
-        }
-
-        /* Fullscreen */
-        .video-js.vjs-fullscreen {
-            width: 100% !important;
-            height: 100% !important;
-        }
-
-        /* Mobil */
-        @media (max-width: 600px) {
-
-            .video-js .vjs-control-bar {
-                height: 52px;
-                padding: 0 6px;
-            }
-
-            .video-js .vjs-control {
-                width: 36px;
-            }
-
-            .video-js .vjs-button > .vjs-icon-placeholder:before {
-                font-size: 1.3em;
-                line-height: 38px;
-            }
-
-            .video-js .vjs-time-control {
-                font-size: 11px;
-            }
-
-            .video-js .vjs-big-play-button {
-                width: 64px;
-                height: 64px;
-                margin-left: -32px;
-                margin-top: -32px;
-            }
-
-            .video-js .vjs-big-play-button .vjs-icon-placeholder:before {
-                font-size: 34px;
-                line-height: 64px;
-            }
-
-            .video-js .vjs-progress-control {
-                left: 7px;
-                right: 7px;
-            }
+            width: 100%;
+            height: 100vh;
         }
     </style>
 </head>
 
 <body>
 
-<div class="player-container">
-
-    <video
-        id="player"
-        class="video-js vjs-big-play-centered"
-        controls
-        autoplay
-        muted
-        playsinline
-        preload="auto"
-        allowfullscreen
-    >
-        <source
-            src="https://under-terminology-clinton-roll.trycloudflare.com/stream.m3u8"
-            type="application/x-mpegURL">
-    </video>
-
-</div>
+<video
+    id="player"
+    class="video-js vjs-big-play-centered"
+    controls
+    autoplay
+    muted
+    playsinline
+    preload="auto"
+    allowfullscreen
+>
+    <source
+        src="https://under-terminology-clinton-roll.trycloudflare.com/stream.m3u8"
+        type="application/x-mpegURL">
+</video>
 
 <script src="https://vjs.zencdn.net/8.23.4/video.min.js"></script>
 
@@ -195,12 +61,14 @@ const player = videojs('player', {
     }
 });
 
+/* Permite fullscreen și prin iframe */
 document.addEventListener('fullscreenchange', function () {
     if (document.fullscreenElement) {
         document.body.style.background = '#000';
     }
 });
 
+/* Buton fullscreen separat */
 function goFullscreen() {
     const element = document.documentElement;
 
@@ -214,4 +82,3 @@ function goFullscreen() {
 
 </body>
 </html>
-```
