@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ro">
 <head>
@@ -6,25 +7,75 @@
 
     <title>BToons</title>
 
-    <link href="https://vjs.zencdn.net/8.23.4/video-js.css" rel="stylesheet">
+    <link
+        href="https://vjs.zencdn.net/8.23.4/video-js.css"
+        rel="stylesheet"
+    >
 
     <style>
-        html, body {
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
             margin: 0;
             padding: 0;
-            background: #000;
             width: 100%;
-            height: 100%;
+            min-height: 100%;
+            background: #000;
+        }
+
+        body {
+            overflow-x: hidden;
+        }
+
+        .player-container {
+            width: 100%;
+            max-width: 1920px;
+            margin: 0 auto;
+            background: #000;
         }
 
         .video-js {
-            width: 100%;
-            height: 100vh;
+            width: 100% !important;
+            height: auto !important;
+            aspect-ratio: 16 / 9;
+        }
+
+        /* Telefon */
+        @media (max-width: 600px) {
+            .video-js {
+                aspect-ratio: 16 / 9;
+            }
+        }
+
+        /* Tabletă */
+        @media (min-width: 601px) and (max-width: 1024px) {
+            .video-js {
+                aspect-ratio: 16 / 9;
+            }
+        }
+
+        /* Desktop */
+        @media (min-width: 1025px) {
+            .video-js {
+                aspect-ratio: 16 / 9;
+            }
+        }
+
+        /* Fullscreen */
+        .video-js.vjs-fullscreen {
+            width: 100% !important;
+            height: 100% !important;
+            aspect-ratio: auto;
         }
     </style>
 </head>
 
 <body>
+
+<div class="player-container">
 
     <video
         id="player"
@@ -34,17 +85,29 @@
         muted
         playsinline
         preload="auto"
+        allowfullscreen
     >
         <source
             src="https://under-terminology-clinton-roll.trycloudflare.com/stream.m3u8"
             type="application/x-mpegURL">
     </video>
 
-    <script src="https://vjs.zencdn.net/8.23.4/video.min.js"></script>
+</div>
 
-    <script>
-        const player = videojs('player');
-    </script>
+<script src="https://vjs.zencdn.net/8.23.4/video.min.js"></script>
+
+<script>
+    const player = videojs('player', {
+        responsive: true,
+        fluid: false,
+        fill: false,
+        controls: true,
+        autoplay: true,
+        muted: true,
+        playsinline: true
+    });
+</script>
 
 </body>
 </html>
+```
