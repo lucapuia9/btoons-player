@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Urmează — BToons</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#fff;color:#111}.box{max-width:900px;margin:auto;padding:18px}.head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}.head h2{margin:0;font-size:22px}.full{padding:9px 14px;border-radius:8px;background:#111;color:#fff;text-decoration:none;font-weight:700}.item{padding:13px 0;border-bottom:1px solid #ddd}.time{font-size:13px;color:#777;margin-bottom:4px}.title{font-size:18px;font-weight:700}.err{color:#b00020}
+</style></head><body><div class="box"><div class="head"><h2>URMEAZĂ</h2><a class="full" id="full" href="#">PROGRAM COMPLET</a></div><div id="list">Se încarcă...</div></div>
+<script src="config.js"></script><script src="program-data.js"></script><script>
+const FULL_PROGRAM_URL='https://sites.google.com/view/btoonsro/program';
+document.getElementById('full').href=FULL_PROGRAM_URL;
+async function load(){const el=document.getElementById('list');try{const all=await getPrograms();const now=Date.now();const seen=new Set();const next=all.filter(p=>{const key=[p.date,p.start_time,p.stop_time,p.title].map(x=>String(x||'').trim().toLowerCase()).join('|');if(seen.has(key))return false;seen.add(key);return true;}).filter(p=>p.title).slice(0,5);el.innerHTML=next.length?next.map(p=>`<div class="item"><div class="time">${programTime(p)}</div><div class="title">${programTitle(p)}</div></div>`).join(''):'Nu există programe disponibile momentan.';}catch(e){el.innerHTML='<div class="err">Programul nu este disponibil momentan.</div>';}}
+load();setInterval(load,30000);
+</script></body></html>
