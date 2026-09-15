@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Program BToons</title>
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;background:#111;color:#fff;font-family:Arial,sans-serif}
+    .wrap{width:100%;max-width:850px;margin:0 auto;padding:24px 16px 40px}
+    h1{text-align:center;margin:0 0 8px;font-size:28px}
+    .updated{text-align:center;color:#777;font-size:13px;margin-bottom:22px}
+    .back{display:block;text-align:center;color:#fff;text-decoration:none;background:#292929;padding:11px;border-radius:9px;margin-bottom:22px}
+    .day{font-size:20px;font-weight:bold;margin:25px 0 10px}
+    .program{display:flex;gap:16px;background:#1d1d1d;border-radius:12px;padding:15px;margin-bottom:9px;align-items:center}
+    .program.current{outline:2px solid #fff}
+    .time{width:95px;flex:none;color:#aaa;font-size:14px;line-height:1.6;text-align:center}
+    .name{font-size:17px;font-weight:700}
+    .badge{display:inline-block;margin-left:9px;padding:4px 7px;border-radius:6px;background:#fff;color:#111;font-size:11px;vertical-align:middle}
+    .error,.empty{background:#1d1d1d;color:#aaa;border-radius:12px;padding:18px;text-align:center}
+    @media(max-width:600px){.program{gap:8px}.time{width:72px;font-size:12px}.name{font-size:15px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Program BToons</h1>
+    <div class="updated" id="updated">Se încarcă...</div>
+    <a class="back" href="index.html">← Înapoi la BToons</a>
+    <div id="list"></div>
+  </div>
+
+  <script src="config.js"></script>
+  <script>
+    function esc(value){const d=document.createElement('div');d.textContent=value ?? '';return d.innerHTML}
+    function apiUrl(){
+      try{
+        const u=new URL(STREAM_URL);
+        u.pathname=u.pathname.replace(/\/[^/]*$/,'/public-program');
+        u.search='';u.hash='';
+        return u.toString();
+      }catch(e){throw new Error('Linkul streamului din config.js nu este valid.')}
+    }
+    function dateLabel(s){
+      const d=new Date(s+'T12:00:00');
+      return d.toLocaleDateString('ro-RO',{weekday:'long',day:'numeric',month:'long'})
+        .replace(/^./,c=>c.toUpperCase());
+    }
+    async function update(){
+      const list=document.getElementById('list');
+      try{
+        const r=await fetch(apiUrl()+'?t='+Date.now(),{cache:'no-store'});
+        const d=await r.json();
+        if(!r.ok) throw new Error(d.message||'Programul nu este disponibil momentan.');
+        const groups={};
+        const seen=new Set();
+        (d.programs||[]).forEach(x=>{
+          const key=[x.date,x.start_time,x.stop_time,x.title].map(v=>String(v||'').trim().toLowerCase()).join('|');
+          if(seen.has(key)) return;
+          seen.add(key);
+          (groups[x.date]||(groups[x.date]=[])).push(x);
+        });
+        let html='';
+        Object.keys(groups).sort().forEach(day=>{
+          html+='<div class="day">'+esc(dateLabel(day))+'</div>';
+          groups[day].forEach(x=>{
+            html+='<div class="program '+(x.current?'current':'')+'">'
+              +'<div class="time">'+esc(x.start_time)+'<br>—<br>'+esc(x.stop_time)+'</div>'
+              +'<div class="name">'+esc(x.title)+(x.current?'<span class="badge">ACUM</span>':'')+'</div>'
+              +'</div>';
+          });
+        });
+        list.innerHTML=html||'<div class="empty">Programul BToons nu este disponibil momentan.</div>';
+        document.getElementById('updated').textContent='Actualizat: '+new Date().toLocaleTimeString('ro-RO');
+      }catch(e){
+        list.innerHTML='<div class="error">'+esc(e.message||'Programul BToons nu este disponibil momentan.')+'</div>';
+        document.getElementById('updated').textContent='Program indisponibil';
+      }
+    }
+    update();
+    setInterval(update,30000);
+  </script>
+</body>
+</html>
