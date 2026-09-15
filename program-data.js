@@ -3,24 +3,16 @@ const SCHEDULE = [
 ];
 
 const DATE_OVERRIDES = {
-  "2026-09-19": [
-    { time: "17:20", name: "Camp Rock 3", episodes: 1, badge: "PREMIERĂ", end: "19:00" }
-  ]
+  "2026-09-19": {
+    "17:20": { name: "Camp Rock 3", episodes: 1, badge: "PREMIERĂ", end: "19:00" }
+  }
 };
 
 function getScheduleForDate(date = new Date()) {
-  const key = [date.getFullYear(), String(date.getMonth() + 1).padStart(2, '0'), String(date.getDate()).padStart(2, '0')].join('-');
-  const overrides = DATE_OVERRIDES[key];
-  if (!overrides) return SCHEDULE.map(x => ({ time: x[0], name: x[1], episodes: x[2] }));
-
-  const override = overrides[0];
-  return SCHEDULE
-    .filter(x => x[0] !== '17:20' && x[0] !== '18:10')
-    .map(x => ({ time: x[0], name: x[1], episodes: x[2] }))
-    .concat({ time: override.time, name: override.name, episodes: override.episodes, badge: override.badge, end: override.end })
-    .sort((a, b) => {
-      const am = Number(a.time.slice(0, 2)) * 60 + Number(a.time.slice(3));
-      const bm = Number(b.time.slice(0, 2)) * 60 + Number(b.time.slice(3));
-      return am - bm;
-    });
+  const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+  const override = DATE_OVERRIDES[key]?.["17:20"];
+  return SCHEDULE.filter(x => !(override && x[0] === "18:10")).map(x => {
+    if (override && x[0] === "17:20") return { time: x[0], name: override.name, episodes: override.episodes, badge: override.badge, end: override.end };
+    return { time: x[0], name: x[1], episodes: x[2] };
+  });
 }
