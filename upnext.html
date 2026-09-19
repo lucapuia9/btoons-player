@@ -3,48 +3,48 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Urmează - BToons</title>
+<title>BToons - Urmează</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#111;color:#fff;font-family:Arial,Helvetica,sans-serif;min-height:100vh;padding:20px}
-.wrap{max-width:850px;margin:auto}
-.panel{background:#1c1c1c;border-radius:16px;padding:20px;margin:0;box-shadow:0 12px 40px rgba(0,0,0,.35)}
-.row{padding:14px 15px;border-radius:10px;background:#292929;border:1px solid transparent;margin-top:8px;font-size:16px;line-height:1.4;color:#fff}
-.row:first-child{margin-top:0}
-.row.now{background:#303030;border-left:4px solid #00d26a;padding-left:12px;font-weight:700}
-.row.section{background:transparent;border:0;color:#aaa;font-weight:700;padding:8px 4px 2px;margin-top:8px}
-.live-dot{display:inline-block;width:10px;height:10px;background:#ff3030;border-radius:50%;margin-left:8px;vertical-align:middle;box-shadow:0 0 0 2px #303030,0 0 0 3px #ff3030;animation:livepulse 1.4s infinite}
-@keyframes livepulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.82)}}
-@media(max-width:700px){body{padding:10px}.panel{border-radius:14px;padding:10px}.row{font-size:15px;padding:12px 13px}.row.now{padding-left:10px}}
+*{box-sizing:border-box}html,body{margin:0;padding:0;background:#111;color:#fff;font-family:Arial,Helvetica,sans-serif}
+body{padding:18px}.container{max-width:900px;margin:auto}
+.panel{background:#1c1c1c;border:1px solid #333;border-radius:14px;overflow:hidden;box-shadow:0 8px 28px rgba(0,0,0,.22)}
+.header{padding:16px 18px 13px;border-bottom:1px solid #303030}.header h1{margin:0;font-size:24px}.sub{color:#888;font-size:12px;margin-top:5px}
+.row{display:flex;align-items:center;gap:14px;padding:13px 16px;border-bottom:1px solid #303030;background:#292929}
+.row:last-child{border-bottom:0}.row.now{background:#303030;box-shadow:inset 4px 0 0 #00d26a}
+.time{width:58px;flex:0 0 58px;font-weight:800}.info{min-width:0;flex:1}
+.title{font-size:16px;font-weight:700;line-height:1.35}.meta{color:#888;font-size:12px;margin-top:3px}
+.current{color:#00d26a;font-size:11px;font-weight:800;margin-left:8px}
+.badge{display:inline-flex;padding:4px 8px;border-radius:6px;margin-left:8px;font-size:10px;font-weight:800;vertical-align:middle}
+.badge-premiere{background:#b8860b;color:#fff}.empty{text-align:center;color:#888;padding:28px 18px}.footer{text-align:center;color:#666;font-size:11px;padding:10px 6px 2px}
+@media(max-width:600px){body{padding:10px}.header h1{font-size:21px}.row{gap:10px;padding:12px}.time{width:50px;flex-basis:50px}.title{font-size:14px}}
 </style>
 </head>
 <body>
-<div class="wrap"><div class="panel" id="list"></div></div>
-<script src="program-data.js"></script>
+<div class="container"><div class="panel">
+<div class="header"><h1>Urmează</h1><div class="sub" id="updated">Se actualizează...</div></div>
+<div id="list"><div class="empty">Se încarcă...</div></div>
+</div><div class="footer">BToons</div></div>
 <script>
-function m(t){let a=t.split(':').map(Number);return a[0]*60+a[1]}
-function label(x){return x[0]+' — '+x[1]+(x[2]>1?' ('+x[2]+' episoade)':'')}
-function render(){
-  let d=new Date(),cur=d.getHours()*60+d.getMinutes();
-  let base=SCHEDULE.map(x=>[x[0],x[1],x[2],m(x[0])]);
-  let norm=cur<360?cur+1440:cur;
-  let times=base.map(x=>x[3]<360?x[3]+1440:x[3]);
-  let active=-1;
-  for(let i=0;i<times.length;i++){
-    let start=times[i],end=i<times.length-1?times[i+1]:times[0]+1440;
-    if(norm>=start&&norm<end){active=i;break}
-  }
-  if(active<0)active=0;
-  let current=SCHEDULE[active];
-  let items=[];
-  for(let i=1;i<=5;i++)items.push(SCHEDULE[(active+i)%SCHEDULE.length]);
-  document.getElementById('list').innerHTML=
-    '<div class="row now">ACUM <span class="live-dot"></span> — '+label(current)+'</div>'+ 
-    '<div class="row section">URMEAZĂ</div>'+ 
-    items.map(x=>'<div class="row">'+label(x)+'</div>').join('');
-}
-render();
-setInterval(render,30000);
+const SCHEDULE=[
+["06:00","VIPO, Câinele zburător",2],["06:10","ȚUP",1],["06:30","Dora Exploratoarea",2],
+["07:20","SpongeBob Pantaloni Pătrați",2],["08:10","Phineas și Ferb",2],["09:00","Riley și Restul Lumii",2],
+["09:50","Alex și Trupa",2],["10:40","Jocurile Succesului",2],["11:30","SpongeBob P.P",2],
+["12:20","Phineas și Ferb",2],["13:10","iCarly",2],["14:00","Victoria în lumina reflectoarelor",2],
+["14:50","Viața cu Loiue",2],["15:40","Copii de la 402",2],["16:30","Johnny Bravo",2],
+["16:50","Spioanele",1],["17:20","Phineas și Ferb",2],["18:10","Jocuriile Succesului",2],
+["19:00","Riley și Restul Lumii",2],["19:50","Rabbids Invasion",1],["20:00","Alex și Trupa",2],
+["20:50","Henry Pericol",2],["21:40","iCarly",3],["22:55","Victoria în lumina reflectoarelor",2],
+["23:45","Totul Pentru Dans",2],["00:35","Spioanele",1],["01:00","SpongeBob Pantaloni Pătrați",2],
+["01:50","Jocurile Succesului",2],["02:40","Riley și Restul Lumii",2],["03:30","Victoria în lumina reflectoarelor",2],
+["04:20","Spioanele",2],["05:10","SpongeBob P.P.",2]
+];
+const DATE_OVERRIDES={"2026-09-19":{"17:20":{name:"Camp Rock 3",episodes:1,badge:"PREMIERĂ",end:"19:00"}}};
+function minutes(t){const [h,m]=t.split(":").map(Number);return h*60+m}
+function key(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function build(d){const o=(DATE_OVERRIDES[key(d)]||{})["17:20"];return SCHEDULE.filter(x=>!(o&&x[0]==="18:10")).map(x=>o&&x[0]==="17:20"?{time:x[0],name:o.name,episodes:o.episodes,badge:o.badge,end:o.end}:{time:x[0],name:x[1],episodes:x[2]})}
+function activeIndex(s,d){let cur=d.getHours()*60+d.getMinutes();if(cur<360)cur+=1440;for(let i=0;i<s.length;i++){let st=minutes(s[i].time);if(st<360)st+=1440;let en;if(s[i].end){en=minutes(s[i].end);if(en<=st%1440)en+=1440}else{en=i<s.length-1?minutes(s[i+1].time):minutes(s[0].time)+1440;if(en<st)en+=1440}if(cur>=st&&cur<en)return i}return -1}
+function esc(v){const d=document.createElement("div");d.textContent=v??"";return d.innerHTML}
+function render(){const now=new Date(),s=build(now),a=activeIndex(s,now),rows=[];if(a>=0){rows.push({x:s[a],now:true});for(let n=1;n<=5&&n<s.length;n++)rows.push({x:s[(a+n)%s.length],now:false})}else{s.slice(0,5).forEach(x=>rows.push({x,now:false}))}document.getElementById("list").innerHTML=rows.map(r=>{const x=r.x,b=x.badge?'<span class="badge badge-premiere">'+esc(x.badge)+'</span>':"";const e=x.episodes>1?" · "+x.episodes+" episoade":"";return '<div class="row '+(r.now?"now":"")+'"><div class="time">'+x.time+'</div><div class="info"><div class="title">'+esc(x.name)+b+(r.now?'<span class="current">● ACUM</span>':"")+'</div><div class="meta">'+(r.now?"În direct":"Urmează")+e+'</div></div></div>'}).join("");document.getElementById("updated").textContent="Actualizat la "+now.toLocaleTimeString("ro-RO",{hour:"2-digit",minute:"2-digit"})}
+render();setInterval(render,30000);
 </script>
-</body>
-</html>
+</body></html>
